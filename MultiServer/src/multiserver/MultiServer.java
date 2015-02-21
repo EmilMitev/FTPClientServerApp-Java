@@ -44,14 +44,11 @@ public class MultiServer {
             }
         }   
     }
-   
     
     public static void main(String[] args) {
        MultiServer server = new MultiServer();
        server.init();
        server.start();
-       
-        
     }
 }
 
@@ -134,7 +131,8 @@ class clientThread extends Thread {
         catch (IOException e) {
             System.out.println(e);
         }
-        }
+    }
+    
     public static File[] ListDirectory (String directory) {
         File folder = new File(directory);
         File[] listOfFiles = folder.listFiles();
@@ -142,41 +140,41 @@ class clientThread extends Thread {
     }
     
     public static void SendFile () throws IOException {
-      FileInputStream fis = null;
-      BufferedInputStream bis = null;
-      OutputStream os = null;
-      ServerSocket servsock = null;
-      Socket sock = null;
-      try {
-        servsock = new ServerSocket(SOCKET_PORT);
-        boolean isTrue = true;
-        while (isTrue) {
-          System.out.println("Waiting...");
-          try {
-            sock = servsock.accept();
-            System.out.println("Accepted connection : " + sock);
-            // send file
-            File myFile = new File (FILE_TO_SEND);
-            byte [] mybytearray  = new byte [(int)myFile.length()];
-            fis = new FileInputStream(myFile);
-            bis = new BufferedInputStream(fis);
-            bis.read(mybytearray,0,mybytearray.length);
-            os = sock.getOutputStream();
-            System.out.println("Sending " + FILE_TO_SEND + "(" + mybytearray.length + " bytes)");
-            os.write(mybytearray,0,mybytearray.length);
-            os.flush();
-            System.out.println("Done.");
-            isTrue = false;
-          }
-          finally {
-            if (bis != null) bis.close();
-            if (os != null) os.close();
-            if (sock!=null) sock.close();
-          }
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        OutputStream os = null;
+        ServerSocket servsock = null;
+        Socket sock = null;
+        try {
+            servsock = new ServerSocket(SOCKET_PORT);
+            boolean isTrue = true;
+            while (isTrue) {
+                System.out.println("Waiting...");
+                try {
+                    sock = servsock.accept();
+                    System.out.println("Accepted connection : " + sock);
+                    // send file
+                    File myFile = new File (FILE_TO_SEND);
+                    byte [] mybytearray  = new byte [(int)myFile.length()];
+                    fis = new FileInputStream(myFile);
+                    bis = new BufferedInputStream(fis);
+                    bis.read(mybytearray,0,mybytearray.length);
+                    os = sock.getOutputStream();
+                    System.out.println("Sending " + FILE_TO_SEND + "(" + mybytearray.length + " bytes)");
+                    os.write(mybytearray,0,mybytearray.length);
+                    os.flush();
+                    System.out.println("Done.");
+                    isTrue = false;
+                }
+                finally {
+                  if (bis != null) bis.close();
+                  if (os != null) os.close();
+                  if (sock!=null) sock.close();
+                }
+            }
         }
-      }
-      finally {
-        if (servsock != null) servsock.close();
-      }
+        finally {
+          if (servsock != null) servsock.close();
+        }
     }
-    }
+}
