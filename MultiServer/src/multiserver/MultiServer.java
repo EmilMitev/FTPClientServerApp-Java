@@ -1,7 +1,6 @@
 package multiserver;
 
 import java.io.*;
-import static java.lang.System.exit;
 import java.net.*;
 
 public class MultiServer {
@@ -82,7 +81,6 @@ class clientThread extends Thread {
                 System.out.println(line);
                 if (line.contains("quit")) {
                     outputStream.println(line);
-                    exit(1);
                 }
                 else if (line.contains("list")) {
                     listDir = ListDirectory(FILE_TO_SEND);
