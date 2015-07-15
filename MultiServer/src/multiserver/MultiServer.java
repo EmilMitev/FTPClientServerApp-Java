@@ -79,51 +79,55 @@ class clientThread extends Thread {
             do {
                 line = inputStream.readLine();
                 System.out.println(line);
-                if (line.contains("quit")) {
-                    outputStream.println(line);
-                }
-                else if (line.contains("list")) {
-                    listDir = ListDirectory(FILE_TO_SEND);
-                    outputStream.println(line);  
-                    outputStream.println(listDir.length);  
-                    for (File list1 : listDir) {
-                        if (list1.isFile()) {
-                            outputStream.println("File " + list1.getName());
-                        } else if (list1.isDirectory()) {
-                            outputStream.println("Directory " + list1.getName());
-                        }
-                    }       
-                }
-                else if (line.contains("send")) {
-                    outputStream.println(line);
-                    SendFile();
-                }
-                else if (line.contains("..")) {
-                    int index = FILE_TO_SEND.lastIndexOf('\\');
-                    FILE_TO_SEND = FILE_TO_SEND.substring(0, index);
-                    outputStream.println(line);
-                    listDir = null;
-                }
-                else{   
-                    boolean isTrue = false;
-                    if (listDir != null) {
-                        for (File list1 : listDir) {
-                            String str = list1.toString();
-                            if (str.contains(line)) {
-                                isTrue = true;
-                                break;
-                            }
-                        }  
-                    }
-                    if (isTrue) {
-                        FILE_TO_SEND = FILE_TO_SEND + "\\" + line;
-                        listDir = null;
+                
+                switch(line){
+                    case "quit":
                         outputStream.println(line);
-                    }
-                    else{
-                        outputStream.println("Wrong command");
-                    }
+                        break;
+                    case "ls":
+                        listDir = ListDirectory(FILE_TO_SEND);
+                        outputStream.println(line);  
+                        outputStream.println(listDir.length);  
+                        for (File list1 : listDir) {
+                            if (list1.isFile()) {
+                                outputStream.println("File " + list1.getName());
+                            } else if (list1.isDirectory()) {
+                                outputStream.println("Directory " + list1.getName());
+                            }
+                        } 
+                        break; 
+                    case "send":
+                        outputStream.println(line);
+                        SendFile();
+                        break;
+                    case "..": 
+                        int index = FILE_TO_SEND.lastIndexOf('\\');
+                        FILE_TO_SEND = FILE_TO_SEND.substring(0, index);
+                        outputStream.println(line);
+                        listDir = null;
+                        break;
+                    default:
+                        boolean isTrue = false;
+                        if (listDir != null) {
+                            for (File list1 : listDir) {
+                                String str = list1.toString();
+                                if (str.contains(line)) {
+                                    isTrue = true;
+                                    break;
+                                }
+                            }  
+                        }
+                        if (isTrue) {
+                            FILE_TO_SEND = FILE_TO_SEND + "\\" + line;
+                            listDir = null;
+                            outputStream.println(line);
+                        }
+                        else{
+                            outputStream.println("Wrong command");
+                        }
+                        break;
                 }
+                
             } while (true);
         } 
         catch (IOException e) {
